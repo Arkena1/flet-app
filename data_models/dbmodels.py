@@ -1,5 +1,5 @@
 from sqlalchemy import String, Integer, ForeignKey, Column
-from database import Base
+from data_models.database import Base
 
 class Province(Base):
     __tablename__ = "provinces"

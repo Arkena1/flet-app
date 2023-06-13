@@ -12,7 +12,7 @@ class CreateSoursPage:
         def save_handler(self):
             page.go("/")    
         return View(
-            "/sours",
+            "/source",
             controls=[
                 TextField(ref=tt),
                 ElevatedButton("Назад", on_click= back_handler),

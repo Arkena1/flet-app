@@ -9,6 +9,9 @@ class CreateProvincePage:
         def back_handler(self):
             page.go("/")
         def save_handler(self):
+            page.db.crud.create_province(page.db.db_session, {"name":tt.current.value})
+            page.update_datas()
+            page.update()
             page.go("/")    
         return View(
             "/province",

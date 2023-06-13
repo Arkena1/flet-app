@@ -3,13 +3,18 @@ import flet as ft
 class Combobox(ft.UserControl):
     
     def deleteHandle(self,e):
-        pass  
+        self.data.get("delete")(self.page.db.db_session, self.tt.current.value)
+        self.page.update_datas()
+        self.page.go(self.page.route)
+
+    def changeHandle(self,e):
+        print("option change")
     def updateHandle(self,e):
-        pass
+        self.page.go(self.data.get("add")+"/"+self.tt.current.value)
     def addHandle(self,e):
         print(self.tt.current.value)
         self.page.go(self.data.get("add"))
-
+        
     def build(self):
         
         self.tt = ft.Ref[ft.Dropdown]()
@@ -19,8 +24,9 @@ class Combobox(ft.UserControl):
                     ref=self.tt,
                     width = 370,
                     label=self.data.get("label"),
+                    on_change = self.data.get("change"),
                     hint_text="Выберете "+self.data.get("label"),
-                    options=[ ft.dropdown.Option(*option) for option in self.data.get("options")],
+                    options=[ ft.dropdown.Option(option.get('id'), option.get('name')) for option in self.data.get("options")],
                 ),
                 ft.PopupMenuButton(
                     visible = self.data.get("popup_visible"),

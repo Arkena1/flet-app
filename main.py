@@ -7,22 +7,40 @@ from views.creates.sub_province import CreateSubProvincePage
 from views.creates.area import CreateAreaPage
 from views.creates.field import CreateFieldPage
 from views.creates.pipe import CreatePipePage
-from views.creates.sours import CreateSoursPage
+from views.creates.source import CreateSoursPage
 from views.creates.pipeinfo import CreatePipeinfoPage
+from views.updates.province import UpdateProvincePage
 from views.components.combobox import Combobox
+from data_models.test import  table_data, data_list, province_data, subprovince_data, area_data, field_data
+import db_datas
+
+models_data ={"table" : table_data, 
+            "data_list": data_list
+            }
+
 
 
 def main(page: ft.Page):
     page.title = "Main"
+    page.db = db_datas
+    def update_data():
+        models_data["province_data"]= page.db.crud.get_provinces(page.db.db_session)
+        models_data["subprovince_data"]= page.db.crud.get_sub_provinces(page.db.db_session)
+        models_data["area_data"]= page.db.crud.get_areas(page.db.db_session)
+        models_data["field_data"]= page.db.crud.get_fields(page.db.db_session)
+        page.models =  models_data
+    page.update_datas = update_data
+    page.update_datas()
     app_routes = [
         path(url="/", clear=True, view=MainPage().view),
         path(url="/update/:id", clear=True, view=UpdatePage().view),
         path(url="/province", clear=True, view=CreateProvincePage().view),
+        path(url="/province/:id", clear=True, view=UpdateProvincePage().view),
         path(url="/sub_province", clear=True, view=CreateSubProvincePage().view),
         path(url="/area", clear=True, view=CreateAreaPage().view),
         path(url="/field", clear=True, view=CreateFieldPage().view),
         path(url="/pipe", clear=True, view=CreatePipePage().view),
-        path(url="/sours", clear=True, view=CreateSoursPage().view),
+        path(url="/source", clear=True, view=CreateSoursPage().view),
         path(url="/pipeinfo", clear=True, view=CreatePipeinfoPage().view),
         
     ]
