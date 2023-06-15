@@ -10,25 +10,27 @@ from views.creates.pipe import CreatePipePage
 from views.creates.source import CreateSoursPage
 from views.creates.pipeinfo import CreatePipeinfoPage
 from views.updates.province import UpdateProvincePage
+from views.updates.pipe import UpdatePipePage
 from views.components.combobox import Combobox
 from data_models.test import  table_data, data_list, province_data, subprovince_data, area_data, field_data
 import db_datas
 
-models_data ={"table" : table_data, 
-            "data_list": data_list
+models_data ={"table" : table_data
             }
 
 
 
 def main(page: ft.Page):
-    page.title = "Main"
+    page.title = "Главная"
     page.db = db_datas
     def update_data():
         models_data["province_data"]= page.db.crud.get_provinces(page.db.db_session)
         models_data["subprovince_data"]= page.db.crud.get_sub_provinces(page.db.db_session)
         models_data["area_data"]= page.db.crud.get_areas(page.db.db_session)
         models_data["field_data"]= page.db.crud.get_fields(page.db.db_session)
+        models_data["data_list"]= page.db.crud.get_pipes(page.db.db_session)
         page.models =  models_data
+        page.update()
     page.update_datas = update_data
     page.update_datas()
     app_routes = [
@@ -40,6 +42,7 @@ def main(page: ft.Page):
         path(url="/area", clear=True, view=CreateAreaPage().view),
         path(url="/field", clear=True, view=CreateFieldPage().view),
         path(url="/pipe", clear=True, view=CreatePipePage().view),
+        path(url="/pipe/:id", clear=True, view=UpdatePipePage().view),
         path(url="/source", clear=True, view=CreateSoursPage().view),
         path(url="/pipeinfo", clear=True, view=CreatePipeinfoPage().view),
         

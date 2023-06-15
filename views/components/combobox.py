@@ -3,31 +3,35 @@ import flet as ft
 class Combobox(ft.UserControl):
     
     def deleteHandle(self,e):
-        self.data.get("delete")(self.page.db.db_session, self.tt.current.value)
+        self.data.get("delete")(self.page.db.db_session, self.tt.value)
         self.page.update_datas()
-        self.page.go(self.page.route)
-
+        self.data.get("update_page")()
+        self.fill_option_data()
+        self.update()
     def changeHandle(self,e):
         print("option change")
     def updateHandle(self,e):
-        self.page.go(self.data.get("add")+"/"+self.tt.current.value)
+        self.page.go(self.data.get("add")+"/"+self.tt.value)
     def addHandle(self,e):
-        print(self.tt.current.value)
         self.page.go(self.data.get("add"))
-        
+    def fill_option_data(self):
+            self.option_data.clear()
+            [ self.option_data.append(ft.dropdown.Option(option.get('id'), option.get('name'))) for option in self.data.get("options")]
     def build(self):
-        
-        self.tt = ft.Ref[ft.Dropdown]()
-        return ft.Row(
-            controls=[
-                ft.Dropdown(
-                    ref=self.tt,
+        self.option_data = []
+        self.tt = ft.Dropdown(
                     width = 370,
+                    value=self.data.get("value"),
                     label=self.data.get("label"),
                     on_change = self.data.get("change"),
                     hint_text="Выберете "+self.data.get("label"),
-                    options=[ ft.dropdown.Option(option.get('id'), option.get('name')) for option in self.data.get("options")],
-                ),
+                    options= self.option_data,
+                )    
+        self.fill_option_data()
+        return ft.Row(
+            controls=[
+                 self.tt
+                ,
                 ft.PopupMenuButton(
                     visible = self.data.get("popup_visible"),
                     items= [

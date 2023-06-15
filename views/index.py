@@ -30,12 +30,12 @@ class ListItem(ft.UserControl):
     def listViewDeleteHandle(self,e):
         print("Удалить "+str(self.data.get("id")))
     def listViewUpdateHandle(self,e):
-        self.page.go(f"/update/{self.key}")
+        self.page.go(f"/pipe/{self.data.get('id')}")
 
     def build(self):
         return ft.ListTile(key=str(self.data.get("id")), 
                                 title=ft.Text(key =self.data.get("id"), 
-                                value =self.data.get("value"), disabled = True),
+                                value =self.data.get("name"), disabled = True),
                                 on_click = self.listViewClickHandle,trailing=ft.PopupMenuButton(
                                 icon=ft.icons.MORE_VERT,
                                 items=[
@@ -45,36 +45,82 @@ class ListItem(ft.UserControl):
                             ),)
     
 class MainPage:
-    def test(self,e):
-        print(1)
+    def __init__(self) -> None:
+        ...
     def view(self, page: ft.Page, params:Params, basket: Basket):
-
-        self.list_datas = page.models.get("data_list")
-        self.province_data = page.models.get("province_data")
-        self.subprovince_data = page.models.get("subprovince_data")
-        self.area_data = page.models.get("area_data")
-        self.field_data = page.models.get("field_data")
-        self.province_cb = ft.Ref[Combobox]()
-        self.subprovince_cb = ft.Ref[Combobox]()
-        self.area_cb = ft.Ref[Combobox]()
-        self.field_cb = ft.Ref[Combobox]()
+        self.comboBoxBlock = []
+        def pageUpdate():
+            comboboxFill()
+            page.update()
+        def provChange(e):
+            self.subprovince_data_current  =  [i for i in self.subprovince_data if i.get("province_id") == int(e.data)]
+            self.area_data_current =  [i for i in self.area_data if i.get("sub_province_id") in [i.get("id") for i in self.subprovince_data_current] ]
+            self.field_data_current =  [i for i in self.field_data if i.get("area_id") in [i.get("id") for i in self.area_data_current] ]
+            comboFill(3)
+        def subprovChange(e):
+            self.area_data_current =  [i for i in self.area_data if i.get("sub_province_id") == int(e.data)]
+            self.field_data_current =  [i for i in self.field_data if i.get("area_id") in [i.get("id") for i in self.area_data_current] ]
+            comboFill(2)
+        def areaChange(e):
+            self.field_data_current =  [i for i in self.field_data if i.get("area_id") == int(e.data)]
+            comboFill(1)
+        def updateData():
+            self.list_datas = page.models.get("data_list")
+            self.province_data = page.models.get("province_data")
+            self.subprovince_data = page.models.get("subprovince_data")
+            self.area_data = page.models.get("area_data")
+            self.field_data = page.models.get("field_data")
+            self.province_data_current =  self.province_data
+            self.subprovince_data_current = self.subprovince_data 
+            self.area_data_current = self.area_data
+            self.field_data_current = self.field_data 
+        def comboboxFill():
+            self.comboBoxBlock.append(Combobox( data={"label":"Провинция", "add":"/province", "delete": page.db.crud.delete_province, "change": provChange, "update_page": pageUpdate, "options": self.province_data_current }))
+            self.comboBoxBlock.append(Combobox( data={"label":"Субпровинция", "add":"/sub_province" ,  "delete": page.db.crud.delete_sub_province,"change": subprovChange, "update_page": pageUpdate,"options": self.subprovince_data_current}))
+            self.comboBoxBlock.append(Combobox(data={"label":"Район", "add":"/area",  "delete": page.db.crud.delete_area,"change": areaChange, "update_page": pageUpdate, "options": self.area_data_current}))
+            self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field, "update_page": pageUpdate, "options": self.field_data_current}))
+            if len(self.comboBoxBlock)>4:
+                for _ in range(3):
+                    self.comboBoxBlock.pop(1)
+            page.update()
+        def comboFill(count):
+            for _ in range(count):
+                self.comboBoxBlock.pop()
+            match count:
+                case 1:
+                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field, "options": self.field_data_current}))
+                case 2:
+                    self.comboBoxBlock.append(Combobox(data={"label":"Район", "add":"/area",  "delete": page.db.crud.delete_area,"change": areaChange, "options": self.area_data_current}))
+                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field, "options": self.field_data_current}))
+                case 3:
+                    self.comboBoxBlock.append(Combobox( data={"label":"Субпровинция", "add":"/sub_province" ,  "delete": page.db.crud.delete_sub_province,"change": subprovChange,"options": self.subprovince_data_current}))
+                    self.comboBoxBlock.append(Combobox(data={"label":"Район", "add":"/area",  "delete": page.db.crud.delete_area,"change": areaChange, "options": self.area_data_current}))
+                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field, "options": self.field_data_current}))
+            page.update()
+        updateData()
+        comboboxFill()
         self.tt= ft.View(
             "/",
             controls=[
-                
+         ft.AppBar(
+                leading_width=40,
+                title=ft.Text("Note App"),
+                center_title=True,
+                actions=[
+                    ft.PopupMenuButton(
+                                icon=ft.icons.MORE_VERT,
+                                items=[
+                                    ft.PopupMenuItem(icon=ft.icons.ADD, text= "Источник", on_click= lambda _: page.go("/source")),
+                                    ft.PopupMenuItem(icon=ft.icons.ADD, text= "Трубка", on_click= lambda _: page.go("/pipe")),
+                                    ft.PopupMenuItem(icon=ft.icons.ADD, text= "Информация", on_click= lambda _: page.go("/pipeinfo")),
+                                ],
+                            ),
+                ],
+            ),        
         ft.Row(key = "top_row",controls=[
             ft.Container(
             expand = 1,
-            content =ft.Column(controls=
-            [
-                Combobox(ref= self.province_cb, data={"label":"Провинция", "add":"/province", "delete": page.db.crud.delete_province, "change": self.test, "options": self.province_data}),
-
-                Combobox(ref= self.subprovince_cb, data={"label":"Субпровинция", "add":"/sub_province" ,  "delete": page.db.crud.delete_sub_province,"options": self.subprovince_data}),
-
-                Combobox(ref= self.area_cb, data={"label":"Район", "add":"/area",  "delete": page.db.crud.delete_area, "options": self.area_data}),
-
-                Combobox(ref= self.field_cb, data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field, "options": self.field_data})
-            ])),
+            content =ft.Column(controls= self.comboBoxBlock)),
         ft.Container(
             height = 300,
             expand = 2,

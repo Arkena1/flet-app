@@ -19,7 +19,7 @@ class SubProvince(BaseModel):
 class Area(BaseModel):
     id: Optional[int]
     name: str
-    sub_provinces_id: int
+    sub_province_id: int
 
     class Config:
         orm_mode = True
@@ -27,14 +27,14 @@ class Area(BaseModel):
 class Field(BaseModel):
     id: Optional[int]
     name: str
-    areas_id: int
+    area_id: int
     class Config:
         orm_mode = True
 
 class Pipe(BaseModel):
     id: Optional[int]
     name: str
-    fields_id: int
+    field_id: int
     
     class Config:
         orm_mode = True
@@ -54,7 +54,7 @@ class PipeInfo(BaseModel):
     nitro_percent: str
     platelets: str
     hydrogen: str
-    pipes_id: int
+    pipe_id: int
     source_id: int
     class Config:
         orm_mode = True

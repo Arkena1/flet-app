@@ -126,7 +126,7 @@ def update_field(db: Session, data: schemas.Field):
 
 def get_fields(db: Session):
     ss = db.query(model.Field)
-    result = [schemas.AField(**data.__dict__).dict() for data in ss.all()]
+    result = [schemas.Field(**data.__dict__).dict() for data in ss.all()]
     return result
 
 def get_field(db: Session, id: int):
@@ -201,35 +201,35 @@ def get_source(db: Session, id: int):
     result = schemas.Source(**tt.__dict__).dict()
     return result
 
-# Pipeinfo# Pipeinfo# Pipeinfo# Pipeinfo# Pipeinfo# Pipeinfo# Pipeinfo# Pipeinfo# Pipeinfo
+# PipeInfo# PipeInfo# PipeInfo# PipeInfo# PipeInfo# PipeInfo# PipeInfo# PipeInfo# PipeInfo
 
-def create_pipeinfo(db: Session, data: schemas.Pipeinfo): 
-    db_data = model.Pipeinfo(**data)
+def create_pipeinfo(db: Session, data: schemas.PipeInfo): 
+    db_data = model.PipeInfo(**data)
     db.add(db_data)
     db.commit()
     db.refresh(db_data)
     return db_data
 
 def delete_pipeinfo(db: Session, id: int):
-    ss = db.query(model.Pipeinfo).filter(model.Pipeinfo.id == id)
+    ss = db.query(model.PipeInfo).filter(model.PipeInfo.id == id)
     ss.delete(synchronize_session=False)
     db.commit()
     return {"msg": f"Удаление трубки с {id=} завершено"}
 
-def update_pipeinfo(db: Session, data: schemas.Pipeinfo):
-    loc_model = model.Pipeinfo(**data)
-    ss = db.query(model.Pipeinfo).filter(model.Pipeinfo.id == loc_model.id)
+def update_pipeinfo(db: Session, data: schemas.PipeInfo):
+    loc_model = model.PipeInfo(**data)
+    ss = db.query(model.PipeInfo).filter(model.PipeInfo.id == loc_model.id)
     ss.update(data)
     db.commit()
     return model
 
 def get_pipeinfos(db: Session):
-    ss = db.query(model.Pipeinfo)
-    result = [schemas.Pipeinfo(**data.__dict__).dict() for data in ss.all()]
+    ss = db.query(model.PipeInfo)
+    result = [schemas.PipeInfo(**data.__dict__).dict() for data in ss.all()]
     return result
 
 def get_pipeinfo(db: Session, id: int):
-    ss = db.query(model.Pipeinfo).filter(model.Pipeinfo.id == id)
+    ss = db.query(model.PipeInfo).filter(model.PipeInfo.id == id)
     tt = ss.one()
-    result = schemas.Pipeinfo(**tt.__dict__).dict()
+    result = schemas.PipeInfo(**tt.__dict__).dict()
     return result

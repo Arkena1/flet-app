@@ -19,21 +19,21 @@ class Area(Base):
 
     id = Column("id", Integer ,primary_key = True )
     name = Column ("name", String(255), nullable = False)
-    sub_provinces_id =  Column("sub_provinces_id" , ForeignKey('sub_provinces.id'))
+    sub_province_id =  Column("sub_provinces_id" , ForeignKey('sub_provinces.id'))
 
 class Field(Base):
     __tablename__ = "fields"
 
     id = Column("id", Integer ,primary_key = True )
     name = Column ("name", String(255), nullable = False)
-    areas_id =  Column("areas_id" , ForeignKey('areas.id'))
+    area_id =  Column("area_id" , ForeignKey('areas.id'))
 
 class Pipe(Base):
     __tablename__ = "pipes"
 
     id = Column("id", Integer ,primary_key = True )
     name = Column ("name", String(255), nullable = False)
-    fields_id =  Column("fields_id" , ForeignKey('fields.id'))
+    field_id =  Column("fields_id" , ForeignKey('fields.id'))
 
 
 class Source(Base):
@@ -52,6 +52,6 @@ class PipeInfo(Base):
     nitro_percent = Column ("nitro_percent", String(50), nullable = True)
     platelets = Column ("platelets", String(50), nullable = True)
     hydrogen = Column ("hydrogen", String(50), nullable = True)
-    pipes_id  = Column ("pipes_id", ForeignKey('pipes.id'))
+    pipe_id  = Column ("pipe_id", ForeignKey('pipes.id'))
     source_id = Column ("source_id", ForeignKey('sources.id'))
     
