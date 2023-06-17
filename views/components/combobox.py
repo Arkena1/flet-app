@@ -5,18 +5,18 @@ class Combobox(ft.UserControl):
     def deleteHandle(self,e):
         self.data.get("delete")(self.page.db.db_session, self.tt.value)
         self.page.update_datas()
-        self.data.get("update_page")()
+        for option in self.data.get("options"):
+            if option.get("id") == int(self.tt.value):
+                self.data.get("options").remove(option)
         self.fill_option_data()
         self.update()
-    def changeHandle(self,e):
-        print("option change")
     def updateHandle(self,e):
         self.page.go(self.data.get("add")+"/"+self.tt.value)
     def addHandle(self,e):
         self.page.go(self.data.get("add"))
     def fill_option_data(self):
             self.option_data.clear()
-            [ self.option_data.append(ft.dropdown.Option(option.get('id'), option.get('name'))) for option in self.data.get("options")]
+            [self.option_data.append(ft.dropdown.Option(option.get('id'), option.get('name'))) for option in self.data.get("options")]
     def build(self):
         self.option_data = []
         self.tt = ft.Dropdown(
