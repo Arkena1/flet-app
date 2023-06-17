@@ -1,26 +1,23 @@
 import flet as ft
 
 class MyDataRow(ft.UserControl):
-    def selectHandle(self, e):
-        print(f"selected {self.id}")
+
     def updateHandle(self, e):
-        pass
+        self.data.get("page").go(f"/pipeinfo/{self.id}")
     def deleteHandle(self, e):
-        pass    
+        self.data.get("page").db.crud.delete_pipeinfo(self.data.get("page").db.db_session, self.id)
+        self.data.get("page").tableFill(self.data.get("pipe_id"))
     def build(self):
-        row = self.data.get("cel")
         self.id =  self.data.get("id")
-        return ft.DataRow(selected=True,
-                    on_select_changed=self.selectHandle,
+        return ft.DataRow(
                     cells=[
-                        ft.DataCell(ft.Text(row[0])),
-                        ft.DataCell(ft.Text(row[1])),
-                        ft.DataCell(ft.Text(row[2])),
-                        ft.DataCell(ft.Text(row[3])),
-                        ft.DataCell(ft.Text(row[4])),
-                        ft.DataCell(ft.Text(row[5])),
-                        ft.DataCell(ft.Text(row[6])),
-                        ft.DataCell(ft.Text(row[7])),
+                        ft.DataCell(ft.Text(self.data.get("nitro_total"), width=75)),
+                        ft.DataCell(ft.Text(self.data.get("nitro_a"), width=50)),
+                        ft.DataCell(ft.Text(self.data.get("nitro_b"), width=50)),
+                        ft.DataCell(ft.Text(self.data.get("nitro_percent"), width=75)),
+                        ft.DataCell(ft.Text(self.data.get("platelets"), width=75)),
+                        ft.DataCell(ft.Text(self.data.get("hydrogen"), width=75)),
+                        ft.DataCell(ft.Text(self.data.get("source_name"), width=255)),
                         ft.DataCell(ft.IconButton(icon = ft.icons.UPDATE_SHARP, on_click=self.updateHandle)),
                         ft.DataCell(ft.IconButton(icon = ft.icons.DELETE, icon_color= "red", on_click= self.deleteHandle)),
                     ],
@@ -28,24 +25,30 @@ class MyDataRow(ft.UserControl):
 
 
 class MyDataTable(ft.UserControl):
+    
     def build(self): # (id, [])
-        table_data = self.controls.models.get("table")
-        print(table_data)
-        return ft.DataTable(
-            
-            columns=[
-                ft.DataColumn(ft.Text("Трубка")),
-                ft.DataColumn(ft.Text("N tot")),
-                ft.DataColumn(ft.Text("N A")),
-                ft.DataColumn(ft.Text("N B")),
-                ft.DataColumn(ft.Text("N B%")),
-                ft.DataColumn(ft.Text("Плейтлетс")),
-                ft.DataColumn(ft.Text("Водород")),
-                ft.DataColumn(ft.Text("Источник данных")),
-                ft.DataColumn(ft.Text("")),
-                ft.DataColumn(ft.Text(""))
-            ],
+        self.table_data = self.data.get("row_data") #self.controls.models.get("table_data")
+        self.rows_list = []
+        def fillRows():
+            if len(self.table_data)>0:
+                [self.rows_list.append(row) for row in self.table_data]
+        fillRows()
+        return ft.Container(
+            ft.DataTable(
+                vertical_lines=ft.border.BorderSide(2, ft.colors.BLUE_GREY_100),
+                columns=[
+                    ft.DataColumn(ft.Text("Азот общее")),
+                    ft.DataColumn(ft.Text("Азот А")),
+                    ft.DataColumn(ft.Text("Азот B")),
+                    ft.DataColumn(ft.Text("Азот процент")),
+                    ft.DataColumn(ft.Text("Плейтлетс")),
+                    ft.DataColumn(ft.Text("Водород")),
+                    ft.DataColumn(ft.Text("Источник данных")),
+                    ft.DataColumn(ft.Text("")),
+                    ft.DataColumn(ft.Text(""))
+                ],
 
-            rows=[MyDataRow(data = {"cel": row, "id": id}).build() for id, row in table_data]
+                rows= self.rows_list
 
+            )
         )

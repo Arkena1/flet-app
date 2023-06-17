@@ -10,8 +10,7 @@ class UpdatePipePage:
         combo = ft.Ref[Combobox]()
         field_data = page.models.get("field_data")    
         pipe_data = page.db.crud.get_pipe(page.db.db_session, id)
-        #combo.current.controls[0].controls[0].value = 
-        print(pipe_data)
+
         def back_handler(self):
             page.go("/")
         def save_handler(self):
@@ -25,7 +24,7 @@ class UpdatePipePage:
             "/pipe/:id",
             controls=[
                 TextField(ref=tt, value= pipe_data.get("name")),
-                Combobox(ref=combo,data={"label":"Поле","value": pipe_data.get("field_id"),"options":field_data,
+                Combobox(ref=combo,data={"label":"Поле","value": pipe_data.get("field_id"),"add":"/source","options":field_data,
                                                         "popup_visible": False
                                                         }),
                 ElevatedButton("Назад", on_click= back_handler),

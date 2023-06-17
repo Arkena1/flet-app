@@ -5,17 +5,61 @@ from views.components.combobox import Combobox
 
 class CreatePipeinfoPage:
     def view(self, page: Page, params: Params, basket: Basket):
-        tt  =  ft.Ref[TextField]()
-        combo = ft.Ref[Combobox]()
+        nitro_total  =  ft.Ref[TextField]()
+        source = ft.Ref[Combobox]()
+        pipes = ft.Ref[Combobox]()
+        nitro_a =  ft.Ref[TextField]()
+        nitro_b =  ft.Ref[TextField]()
+        nitro_percent =  ft.Ref[TextField]()
+        platelets =  ft.Ref[TextField]()
+        hydrogen =  ft.Ref[TextField]()
+        source_data = page.models.get("source_data")     
+        pipes_data = page.models.get("data_list") 
+            
         def back_handler(self):
             page.go("/")
         def save_handler(self):
+            data  = {   
+                "nitro_total": nitro_total.current.value,
+                "nitro_a": nitro_a.current.value,
+                "nitro_b": nitro_b.current.value,
+                "nitro_percent": nitro_percent.current.value,
+                "platelets": platelets.current.value,
+                "hydrogen": hydrogen.current.value,
+                "pipe_id": pipes.current.controls[0].controls[0].value,
+                "source_id": source.current.controls[0].controls[0].value,
+            }
+            page.db.crud.create_pipeinfo(page.db.db_session, data)
+            page.update_datas()
+            page.update()
             page.go("/")    
         return View(
             "/pipeinfo",
             controls=[
-                TextField(ref=tt),
-                ElevatedButton("Назад", on_click= back_handler),
-                ElevatedButton("Сохранить", on_click= save_handler)
+                ft.AppBar(
+                title=ft.Text("Добавить информацию трубки"),
+                actions=[
+                    ft.IconButton(
+                        ft.icons.ARROW_BACK,
+                        on_click= back_handler
+                    ),
+                    
+                    ft.IconButton(
+                        ft.icons.SAVE,
+                        on_click= save_handler
+                    ),
+                ],),
+                TextField(ref=nitro_total, label="Азот общее"),
+                TextField(ref=nitro_a, label="Азот А"),
+                TextField(ref=nitro_b, label="Азот B"),
+                TextField(ref=nitro_percent, label="Азот процент"),
+                TextField(ref=platelets, label="Плейтлетс"),
+                TextField(ref=hydrogen, label="Водород"),
+                Combobox(ref=source,data={"label":"Источник","options":source_data,
+                                                                    "popup_visible": False
+                                                                    }),
+                Combobox(ref=pipes,data={"label":"Трубка","options":pipes_data,
+                                                                    "popup_visible": False
+                                                                        }),
             ]
         )

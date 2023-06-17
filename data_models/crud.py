@@ -223,9 +223,9 @@ def update_pipeinfo(db: Session, data: schemas.PipeInfo):
     db.commit()
     return model
 
-def get_pipeinfos(db: Session):
-    ss = db.query(model.PipeInfo)
-    result = [schemas.PipeInfo(**data.__dict__).dict() for data in ss.all()]
+def get_pipeinfos(db: Session, id:int ):
+    ss = db.query(model.PipeInfo,model.Source.name).select_from(model.PipeInfo).join(model.Source, model.PipeInfo.source_id == model.Source.id).filter(model.PipeInfo.pipe_id == id)
+    result = [schemas.PipeInfo(**data[0].__dict__).dict() | {"source_name" : data[1]} for data in ss.all()]
     return result
 
 def get_pipeinfo(db: Session, id: int):
