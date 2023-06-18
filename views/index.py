@@ -57,11 +57,11 @@ class MainPage:
         self.listBlock = []
         self.table = []
         self.textBlock = []
-        def pageUpdate(e):
-            comboboxFill()
-            page.update()
-        def removeProvice(e):
-            print(e.data)
+        # def pageUpdate(e):
+        #     comboboxFill()
+        #     page.update()
+        # def removeProvice(e):
+        #     print(e.data)
             #self.province_data_current.remove(e.data)
         def provChange(e):
             self.subprovince_data_current  =  [i for i in self.subprovince_data if i.get("province_id") == int(e.data)]
@@ -83,7 +83,7 @@ class MainPage:
             comboFill(1)
         def fieldChange(e):
             self.list_data_current =  [i for i in self.list_datas if i.get("field_id") == int(e.data)] 
-            listFill()   
+            listFill()  
             page.update()
         def listChange(e):
             tableFill(e.data)
@@ -102,10 +102,10 @@ class MainPage:
             self.field_data_current = self.field_data 
         def comboboxFill():
             self.comboBoxBlock.clear()
-            self.comboBoxBlock.append(Combobox( data={"label":"Провинция", "add":"/province", "delete": page.db.crud.delete_province, "change": provChange, "update_page": pageUpdate, "options": self.province_data_current }))
-            self.comboBoxBlock.append(Combobox( data={"label":"Субпровинция", "add":"/sub_province" ,  "delete": page.db.crud.delete_sub_province,"change": subprovChange, "update_page": pageUpdate,"options": self.subprovince_data_current}))
-            self.comboBoxBlock.append(Combobox(data={"label":"Район", "add":"/area",  "delete": page.db.crud.delete_area,"change": areaChange, "update_page": pageUpdate, "options": self.area_data_current}))
-            self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field,"change":fieldChange, "update_page": pageUpdate, "options": self.field_data_current}))
+            self.comboBoxBlock.append(Combobox( data={"label":"Провинция", "add":"/province", "delete": page.db.crud.delete_province, "change": provChange, "options": self.province_data_current }))
+            self.comboBoxBlock.append(Combobox( data={"label":"Субпровинция", "add":"/sub_province" ,  "delete": page.db.crud.delete_sub_province,"change": subprovChange,"options": self.subprovince_data_current}))
+            self.comboBoxBlock.append(Combobox(data={"label":"Район", "add":"/area",  "delete": page.db.crud.delete_area,"change": areaChange, "options": self.area_data_current}))
+            self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field,"change":fieldChange, "options": self.field_data_current}))
 
 
 
@@ -114,14 +114,14 @@ class MainPage:
                 self.comboBoxBlock.pop()
             match count:
                 case 1:
-                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field, "options": self.field_data_current}))
+                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field,"change":fieldChange, "options": self.field_data_current}))
                 case 2:
                     self.comboBoxBlock.append(Combobox(data={"label":"Район", "add":"/area",  "delete": page.db.crud.delete_area,"change": areaChange, "options": self.area_data_current}))
-                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field, "options": self.field_data_current}))
+                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field,"change":fieldChange, "options": self.field_data_current}))
                 case 3:
                     self.comboBoxBlock.append(Combobox( data={"label":"Субпровинция", "add":"/sub_province" ,  "delete": page.db.crud.delete_sub_province,"change": subprovChange,"options": self.subprovince_data_current}))
                     self.comboBoxBlock.append(Combobox(data={"label":"Район", "add":"/area",  "delete": page.db.crud.delete_area,"change": areaChange, "options": self.area_data_current}))
-                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field, "options": self.field_data_current}))
+                    self.comboBoxBlock.append(Combobox( data={"label":"Поле", "add":"/field",  "delete": page.db.crud.delete_field,"change":fieldChange, "options": self.field_data_current}))
             page.update()
         def tableFill(id):
             self.table.clear()
