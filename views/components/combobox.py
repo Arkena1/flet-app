@@ -20,6 +20,7 @@ class Combobox(ft.UserControl):
     def build(self):
         self.option_data = []
         self.tt = ft.Dropdown(
+                    border= ft.InputBorder.OUTLINE,
                     width = 370,
                     value=self.data.get("value"),
                     label=self.data.get("label"),
