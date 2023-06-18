@@ -127,7 +127,11 @@ class MainPage:
             self.table.clear()
             self.table.append(MyDataTable(data={"row_data": [MyDataRow(data = row | {"page":page}).build() for row in page.db.crud.get_pipeinfos(page.db.db_session, id)]}))
             self.textBlock.clear()
-            self.textBlock.append(ft.Text(f"Информация по "  + page.db.crud.get_pipe(page.db.db_session, id).get("name") , text_align= ft.TextAlign.CENTER, width= page.width, size= 24))
+            try:
+                tfid =  page.db.crud.get_pipe(page.db.db_session, id).get("name")
+            except:
+                tfid = ""
+            self.textBlock.append(ft.Text(f"Информация по "  +  tfid, text_align= ft.TextAlign.CENTER, width= page.width, size= 24))
             page.update()
         def delListItem(e):
             del e.data["change"], e.data["update"]
@@ -142,7 +146,7 @@ class MainPage:
 
         comboboxFill()
         listFill()
-        tableFill(1)
+        # tableFill(1)
         return ft.View(
             "/",
             controls=[

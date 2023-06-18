@@ -10,6 +10,7 @@ class MyDataRow(ft.UserControl):
     def build(self):
         self.id =  self.data.get("id")
         return ft.DataRow(
+
                     cells=[
                         ft.DataCell(ft.Text(self.data.get("nitro_total"), width=75)),
                         ft.DataCell(ft.Text(self.data.get("nitro_a"), width=50)),
@@ -17,7 +18,7 @@ class MyDataRow(ft.UserControl):
                         ft.DataCell(ft.Text(self.data.get("nitro_percent"), width=75)),
                         ft.DataCell(ft.Text(self.data.get("platelets"), width=75)),
                         ft.DataCell(ft.Text(self.data.get("hydrogen"), width=75)),
-                        ft.DataCell(ft.Text(self.data.get("source_name"), width=255)),
+                        ft.DataCell(ft.Column(scroll = ft.ScrollMode.AUTO, on_scroll_interval = 0.5, controls=[ft.Text(self.data.get("source_name"), width=255)])),
                         ft.DataCell(ft.IconButton(icon = ft.icons.UPDATE_SHARP, on_click=self.updateHandle)),
                         ft.DataCell(ft.IconButton(icon = ft.icons.DELETE, icon_color= "red", on_click= self.deleteHandle)),
                     ],
@@ -37,13 +38,13 @@ class MyDataTable(ft.UserControl):
             ft.DataTable(
                 vertical_lines=ft.border.BorderSide(2, ft.colors.BLUE_GREY_100),
                 columns=[
-                    ft.DataColumn(ft.Text("Азот общее")),
-                    ft.DataColumn(ft.Text("Азот А")),
-                    ft.DataColumn(ft.Text("Азот B")),
-                    ft.DataColumn(ft.Text("Азот процент")),
-                    ft.DataColumn(ft.Text("Плейтлетс")),
-                    ft.DataColumn(ft.Text("Водород")),
-                    ft.DataColumn(ft.Text("Источник данных")),
+                    ft.DataColumn(ft.Text("Азот общее, at.ppm", width=100)),
+                    ft.DataColumn(ft.Text("Азот А, at.ppm", width=50)),
+                    ft.DataColumn(ft.Text("Азот B, at.ppm", width=50)),
+                    ft.DataColumn(ft.Text("Азот процент, %", width=75)),
+                    ft.DataColumn(ft.Text("Плейтлетс, см^-1", width=75)),
+                    ft.DataColumn(ft.Text("Водород, см^-1", width=75)),
+                    ft.DataColumn(ft.Text("Источник данных", width=255)),
                     ft.DataColumn(ft.Text("")),
                     ft.DataColumn(ft.Text(""))
                 ],
